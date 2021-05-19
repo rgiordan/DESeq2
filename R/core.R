@@ -45,7 +45,7 @@
 
 
 #' DESeq2 package for differential analysis of count data
-#' 
+#'
 #' The DESeq2 package is designed for normalization,
 #' visualization, and differential analysis of high-dimensional
 #' count data. It makes use of empirical Bayes techniques
@@ -62,20 +62,20 @@
 #' \item \code{\link{vst}} - apply variance stabilizing transformation, e.g. for PCA or sample clustering
 #' \item Plots, e.g.: \code{\link{plotPCA}}, \code{\link{plotMA}}, \code{\link{plotCounts}}
 #' }
-#' 
+#'
 #' For detailed information on usage, see the package vignette, by typing
 #' \code{vignette("DESeq2")}, or the workflow linked to on the first page
 #' of the vignette.
-#' 
+#'
 #' All software-related questions should be posted to the Bioconductor Support Site:
-#' 
+#'
 #' \url{https://support.bioconductor.org}
 #'
 #' The code can be viewed at the GitHub repository,
 #' which also lists the contributor code of conduct:
 #'
 #' \url{https://github.com/mikelove/tximport}
-#' 
+#'
 #' @references
 #'
 #' Love, M.I., Huber, W., Anders, S. (2014)
@@ -84,7 +84,7 @@
 #' \url{https://doi.org/10.1186/s13059-014-0550-8}
 #'
 #' @author Michael Love, Wolfgang Huber, Simon Anders
-#' 
+#'
 #' @docType package
 #' @name DESeq2-package
 #' @aliases DESeq2-package
@@ -103,7 +103,7 @@ NULL
 #' functions. After the \code{DESeq} function returns a DESeqDataSet object,
 #' results tables (log2 fold changes and p-values) can be generated
 #' using the \code{\link{results}} function.
-#' Shrunken LFC can then be generated using the \code{\link{lfcShrink}} function. 
+#' Shrunken LFC can then be generated using the \code{\link{lfcShrink}} function.
 #' All support questions should be posted to the Bioconductor
 #' support site: \url{http://support.bioconductor.org}.
 #'
@@ -133,7 +133,7 @@ NULL
 #' of counts around the expected value for each group, which is critical for
 #' differential expression analysis. Analysis without replicates was deprecated
 #' in v1.20 and is no longer supported since v1.22.
-#' 
+#'
 #' The argument \code{minReplicatesForReplace} is used to decide which samples
 #' are eligible for automatic replacement in the case of extreme Cook's distance.
 #' By default, \code{DESeq} will replace outliers if the Cook's distance is
@@ -154,7 +154,7 @@ NULL
 #' described in \code{\link{nbinomWaldTest}} and in the vignette. The
 #' \code{contrast} argument of \code{\link{results}} should be used for
 #' generating results tables.
-#' 
+#'
 #' @return a \code{\link{DESeqDataSet}} object with results stored as
 #' metadata columns. These results should accessed by calling the \code{\link{results}}
 #' function. By default this will return the log2 fold changes and p-values for the last
@@ -165,7 +165,7 @@ NULL
 #' \code{\link{DESeqDataSet}},
 #' \code{\link{DESeqDataSetFromMatrix}},
 #' \code{\link{DESeqDataSetFromHTSeqCount}}.
-#' @param test either "Wald" or "LRT", which will then use either 
+#' @param test either "Wald" or "LRT", which will then use either
 #' Wald significance tests (defined by \code{\link{nbinomWaldTest}}),
 #' or the likelihood ratio test on the difference in deviance between a
 #' full and reduced model formula (defined by \code{\link{nbinomLRT}})
@@ -174,9 +174,9 @@ NULL
 #' See \code{\link{estimateDispersions}} for description.
 #' @param sfType either "ratio", "poscounts", or "iterate"
 #' for the type of size factor estimation. See
-#' \code{\link{estimateSizeFactors}} for description. 
+#' \code{\link{estimateSizeFactors}} for description.
 #' @param betaPrior whether or not to put a zero-mean normal prior on
-#' the non-intercept coefficients 
+#' the non-intercept coefficients
 #' See \code{\link{nbinomWaldTest}} for description of the calculation
 #' of the beta prior. In versions \code{>=1.16}, the default is set
 #' to \code{FALSE}, and shrunken LFCs are obtained afterwards using
@@ -223,17 +223,17 @@ NULL
 #' to \code{\link{bplapply}} when \code{parallel=TRUE}.
 #' If not specified, the parameters last registered with
 #' \code{\link{register}} will be used.
-#' 
+#'
 #' @author Michael Love
-#' 
+#'
 #' @references
 #'
 #' Love, M.I., Huber, W., Anders, S. (2014) Moderated estimation of fold change and dispersion for RNA-seq data with DESeq2. Genome Biology, 15:550. \url{https://doi.org/10.1186/s13059-014-0550-8}
 #'
 #' For \code{fitType="glmGamPoi"}:
-#' 
+#'
 #' Ahlmann-Eltze, C., Huber, W. (2020) glmGamPoi: Fitting Gamma-Poisson Generalized Linear Models on Single Cell Count Data. Bioinformatics. \url{https://doi.org/10.1093/bioinformatics/btaa1009}
-#' 
+#'
 #' @import BiocGenerics BiocParallel S4Vectors IRanges GenomicRanges SummarizedExperiment Biobase Rcpp methods
 #'
 #' @importFrom locfit locfit
@@ -242,7 +242,7 @@ NULL
 #' @importFrom stats Gamma as.formula coefficients df dnbinom dnorm formula glm loess lowess model.matrix optim p.adjust pchisq pnorm prcomp predict pt qf qnorm rchisq relevel rnbinom rnorm runif splinefun terms terms.formula approx
 #' @importFrom utils read.table read.csv askYesNo menu
 #' @importFrom stats4 summary
-#' 
+#'
 #' @useDynLib DESeq2
 #'
 #' @seealso \code{link{results}}, \code{\link{lfcShrink}}, \code{\link{nbinomWaldTest}}, \code{\link{nbinomLRT}}
@@ -264,7 +264,7 @@ NULL
 #' # moderated log2 fold changes
 #' resultsNames(dds)
 #' resLFC <- lfcShrink(dds, coef=2, type="apeglm")
-#' 
+#'
 #' # an alternate analysis: likelihood ratio test
 #' ddsLRT <- DESeq(dds, test="LRT", reduced= ~ 1)
 #' resLRT <- results(ddsLRT)
@@ -305,7 +305,7 @@ DESeq <- function(object, test=c("Wald","LRT"),
   }
   # get rid of any NA in the mcols(mcols(object))
   object <- sanitizeRowRanges(object)
-  
+
   if (test == "LRT") {
     if (missing(reduced)) {
       stop("likelihood ratio test requires a 'reduced' design, see ?DESeq")
@@ -338,7 +338,7 @@ DESeq <- function(object, test=c("Wald","LRT"),
     warning("glmGamPoi dispersion estimator should be used in combination with a LRT and not a Wald test.",
             call. = FALSE)
   }
-  
+
   if (modelAsFormula) {
     # run some tests common to DESeq, nbinomWaldTest, nbinomLRT
     designAndArgChecker(object, betaPrior)
@@ -346,7 +346,7 @@ DESeq <- function(object, test=c("Wald","LRT"),
     if (design(object) == formula(~1)) {
       warning("the design is ~ 1 (just an intercept). is this intended?")
     }
-    
+
     if (full != design(object)) {
       stop("'full' specified as formula should equal design(object)")
     }
@@ -361,10 +361,10 @@ DESeq <- function(object, test=c("Wald","LRT"),
     # this will be used for dispersion estimation and testing
     modelMatrix <- full
   }
- 
+
   attr(object, "betaPrior") <- betaPrior
   stopifnot(length(parallel) == 1 & is.logical(parallel))
-  
+
   if (!is.null(sizeFactors(object)) || !is.null(normalizationFactors(object))) {
     if (!quiet) {
       if (!is.null(normalizationFactors(object))) {
@@ -377,7 +377,7 @@ DESeq <- function(object, test=c("Wald","LRT"),
     if (!quiet) message("estimating size factors")
     object <- estimateSizeFactors(object, type=sfType, quiet=quiet)
   }
-  
+
   if (!parallel) {
     if (!quiet) message("estimating dispersions")
     object <- estimateDispersions(object, fitType=fitType, quiet=quiet, modelMatrix=modelMatrix, minmu=minmu)
@@ -417,7 +417,7 @@ DESeq <- function(object, test=c("Wald","LRT"),
 
   # stash the package version (again, also in construction)
   metadata(object)[["version"]] <- packageVersion("DESeq2")
-  
+
   object
 }
 
@@ -471,7 +471,7 @@ makeExampleDESeqDataSet <- function(n=1000,m=12,betaSD=0,interceptMean=4,interce
   } else {
     as.formula("~ 1", env=.GlobalEnv)
   }
-  
+
   object <- DESeqDataSetFromMatrix(countData = countData,
                                    colData = colData,
                                    design = design,
@@ -489,14 +489,14 @@ makeExampleDESeqDataSet <- function(n=1000,m=12,betaSD=0,interceptMean=4,interce
 
 
 #' Low-level function to estimate size factors with robust regression.
-#' 
+#'
 #' Given a matrix or data frame of count data, this function estimates the size
 #' factors as follows: Each column is divided by the geometric means of the
 #' rows. The median (or, if requested, another location estimator) of these
 #' ratios (skipping the genes with a geometric mean of zero) is used as the size
 #' factor for this column. Typically, one will not call this function directly, but use
 #' \code{\link{estimateSizeFactors}}.
-#' 
+#'
 #' @param counts a matrix or data frame of counts, i.e., non-negative integer
 #' values
 #' @param locfunc a function to compute a location for a sample. By default, the
@@ -515,12 +515,12 @@ makeExampleDESeqDataSet <- function(n=1000,m=12,betaSD=0,interceptMean=4,interce
 #' @author Simon Anders
 #' @seealso \code{\link{estimateSizeFactors}}
 #' @examples
-#' 
+#'
 #' dds <- makeExampleDESeqDataSet()
 #' estimateSizeFactorsForMatrix(counts(dds))
 #' geoMeans <- exp(rowMeans(log(counts(dds))))
 #' estimateSizeFactorsForMatrix(counts(dds),geoMeans=geoMeans)
-#' 
+#'
 #' @export
 estimateSizeFactorsForMatrix <- function(counts, locfunc=stats::median,
                                          geoMeans, controlGenes,
@@ -615,10 +615,10 @@ estimateSizeFactorsForMatrix <- function(counts, locfunc=stats::median,
 #' @param type can either be "DESeq2" or "glmGamPoi". Specifies if the glmGamPoi
 #' package is used to calculate the dispersion. This can be significantly faster
 #' if there are many replicates with small counts.
-#' 
+#'
 #' @return a DESeqDataSet with gene-wise, fitted, or final MAP
 #' dispersion estimates in the metadata columns of the object.
-#' 
+#'
 #' \code{estimateDispersionsPriorVar} is called inside of \code{estimateDispersionsMAP}
 #' and stores the dispersion prior variance as an attribute of
 #' \code{dispersionFunction(dds)}, which can be manually provided to
@@ -633,14 +633,14 @@ estimateSizeFactorsForMatrix <- function(counts, locfunc=stats::median,
 #' dds <- estimateDispersionsGeneEst(dds)
 #' dds <- estimateDispersionsFit(dds)
 #' dds <- estimateDispersionsMAP(dds)
-#' plotDispEsts(dds) 
+#' plotDispEsts(dds)
 #'
 #' # after having run estimateDispersionsFit()
 #' # the dispersion prior variance over all genes
 #' # can be obtained like so:
-#' 
+#'
 #' dispPriorVar <- estimateDispersionsPriorVar(dds)
-#' 
+#'
 #' @seealso \code{\link{estimateDispersions}}
 #'
 #' @export
@@ -652,7 +652,7 @@ estimateDispersionsGeneEst <- function(object, minDisp=1e-8, kappa_0=1,
                                        minmu=if (type=="glmGamPoi") 1e-6 else 0.5,
                                        alphaInit=NULL,
                                        type = c("DESeq2", "glmGamPoi")) {
-  
+
   type <- match.arg(type, c("DESeq2", "glmGamPoi"))
   if (!is.null(mcols(object)$dispGeneEst)) {
     if (!quiet) message("found already estimated gene-wise dispersions, removing these")
@@ -671,7 +671,7 @@ estimateDispersionsGeneEst <- function(object, minDisp=1e-8, kappa_0=1,
   object <- sanitizeRowRanges(object)
 
   if (is.null(modelMatrix)) {
-    modelMatrix <- getModelMatrix(object) 
+    modelMatrix <- getModelMatrix(object)
   }
   checkFullRank(modelMatrix)
   if (nrow(modelMatrix) == ncol(modelMatrix)) {
@@ -679,7 +679,7 @@ estimateDispersionsGeneEst <- function(object, minDisp=1e-8, kappa_0=1,
   i.e., there are no replicates to estimate the dispersion.
   use an alternate design formula")
   }
-  
+
   object <- getBaseMeansAndVariances(object)
 
   # use weights if they are present in assays(object)
@@ -691,7 +691,7 @@ estimateDispersionsGeneEst <- function(object, minDisp=1e-8, kappa_0=1,
   # don't let weights go below 1e-6
   weights <- pmax(weights, 1e-6)
   useWeights <- wlist$useWeights
-  
+
   # only continue on the rows with non-zero row mean
   objectNZ <- object[!mcols(object)$allZero,,drop=FALSE]
   weights <- weights[!mcols(object)$allZero,,drop=FALSE]
@@ -718,7 +718,7 @@ estimateDispersionsGeneEst <- function(object, minDisp=1e-8, kappa_0=1,
   alpha_hat <- alpha_hat_new <- alpha_init <- pmin(pmax(minDisp, alpha_hat), maxDisp)
 
   stopifnot(length(niter) == 1 & niter > 0)
-  
+
   # use a linear model to estimate the expected counts
   # if the number of groups according to the model matrix
   # is equal to the number of columns
@@ -730,7 +730,7 @@ estimateDispersionsGeneEst <- function(object, minDisp=1e-8, kappa_0=1,
       linearMu <- FALSE
     }
   }
-  
+
   # below, iterate between mean and dispersion estimation (niter) times
   fitidx <- rep(TRUE,nrow(objectNZ))
   mu <- matrix(0, nrow=nrow(objectNZ), ncol=ncol(objectNZ))
@@ -750,8 +750,8 @@ estimateDispersionsGeneEst <- function(object, minDisp=1e-8, kappa_0=1,
     }
     fitMu[fitMu < minmu] <- minmu
     mu[fitidx,] <- fitMu
-    
-    
+
+
     # use of kappa_0 in backtracking search
     # initial proposal = log(alpha) + kappa_0 * deriv. of log lik. w.r.t. log(alpha)
     # use log(minDisp/10) to stop if dispersions going to -infinity
@@ -768,7 +768,7 @@ estimateDispersionsGeneEst <- function(object, minDisp=1e-8, kappa_0=1,
                                 useWeightsSEXP = useWeights,
                                 weightThresholdSEXP = weightThreshold,
                                 useCRSEXP = useCR)
-      
+
       dispIter[fitidx] <- dispRes$iter
       alpha_hat_new[fitidx] <- pmin(exp(dispRes$log_alpha), maxDisp)
       last_lp <- dispRes$last_lp
@@ -824,7 +824,7 @@ estimateDispersionsGeneEst <- function(object, minDisp=1e-8, kappa_0=1,
     dispGeneEst[refitDisp] <- dispGrid
   }
   dispGeneEst <- pmin(pmax(dispGeneEst, minDisp), maxDisp)
-  
+
   dispDataFrame <- buildDataFrameWithNARows(list(dispGeneEst=dispGeneEst,
                                                  dispGeneIter=dispIter),
                                             mcols(object)$allZero)
@@ -833,7 +833,7 @@ estimateDispersionsGeneEst <- function(object, minDisp=1e-8, kappa_0=1,
                                                   "number of iterations for gene-wise"))
   mcols(object) <- cbind(mcols(object), dispDataFrame)
   assays(object, withDimnames=FALSE)[["mu"]] <- buildMatrixWithNARows(mu, mcols(object)$allZero)
-  
+
   return(object)
 }
 
@@ -855,7 +855,7 @@ estimateDispersionsFit <- function(object,fitType=c("parametric","local","mean",
   dispersions(dds) <- mcols(dds)$dispGeneEst
   ...then continue with testing using nbinomWaldTest or nbinomLRT")
   }
-  
+
   fitType <- match.arg(fitType, choices=c("parametric","local","mean", "glmGamPoi"))
   stopifnot(length(fitType)==1)
   stopifnot(length(minDisp)==1)
@@ -886,7 +886,7 @@ estimateDispersionsFit <- function(object,fitType=c("parametric","local","mean",
       stop("type='glmGamPoi' requires installing the Bioconductor package 'glmGamPoi'")
     }
     base_means <- mcols(objectNZ)$baseMean[useForFit]
-    median_fit <- glmGamPoi::loc_median_fit(base_means, 
+    median_fit <- glmGamPoi::loc_median_fit(base_means,
                                             mcols(objectNZ)$dispGeneEst[useForFit])
     get_closest_index <- function(x, vec){
       iv <- findInterval(x, vec)
@@ -904,7 +904,7 @@ estimateDispersionsFit <- function(object,fitType=c("parametric","local","mean",
   if (!(fitType %in% c("parametric","local","mean", "glmGamPoi"))) {
     stop("unknown fitType")
   }
- 
+
   # store the dispersion function and attributes
   attr( dispFunction, "fitType" ) <- fitType
   if (quiet) {
@@ -912,7 +912,7 @@ estimateDispersionsFit <- function(object,fitType=c("parametric","local","mean",
   } else {
     dispersionFunction(object) <- dispFunction
   }
-  
+
   return(object)
 }
 
@@ -922,7 +922,7 @@ estimateDispersionsMAP <- function(object, outlierSD=2, dispPriorVar,
                                    minDisp=1e-8, kappa_0=1, dispTol=1e-6,
                                    maxit=100, useCR=TRUE,
                                    weightThreshold=1e-2,
-                                   modelMatrix=NULL, 
+                                   modelMatrix=NULL,
                                    type = c("DESeq2", "glmGamPoi"),
                                    quiet=FALSE) {
   stopifnot(length(outlierSD)==1)
@@ -943,7 +943,7 @@ estimateDispersionsMAP <- function(object, outlierSD=2, dispPriorVar,
   if (is.null(modelMatrix)) {
     modelMatrix <- getModelMatrix(object)
   }
-  
+
   # fill in the calculated dispersion prior variance
   if (missing(dispPriorVar)) {
     # if no gene-wise estimates above minimum
@@ -977,27 +977,27 @@ estimateDispersionsMAP <- function(object, outlierSD=2, dispPriorVar,
   object <- wlist$object
   weights <- wlist$weights
   useWeights <- wlist$useWeights
-  
+
   objectNZ <- object[!mcols(object)$allZero,,drop=FALSE]
   weights <- weights[!mcols(object)$allZero,,drop=FALSE]
   varLogDispEsts <- attr( dispersionFunction(object), "varLogDispEsts" )
-  
+
   # set prior variance for fitting dispersion
   log_alpha_prior_sigmasq <- dispPriorVar
 
   # get previously calculated mu
   mu <- assays(objectNZ)[["mu"]]
-  
+
   if (type == "DESeq2" ) {
     # start fitting at gene estimate unless the points are one order of magnitude
     # below the fitted line, then start at fitted line
     dispInit <- ifelse(mcols(objectNZ)$dispGeneEst >  0.1 * mcols(objectNZ)$dispFit,
                        mcols(objectNZ)$dispGeneEst,
                        mcols(objectNZ)$dispFit)
-  
+
     # if any missing values, fill in the fitted value to initialize
     dispInit[is.na(dispInit)] <- mcols(objectNZ)$dispFit[is.na(dispInit)]
-    
+
     # run with prior
     dispResMAP <- fitDispWrapper(ySEXP = counts(objectNZ),
                                  xSEXP = modelMatrix,
@@ -1012,11 +1012,11 @@ estimateDispersionsMAP <- function(object, outlierSD=2, dispPriorVar,
                                  useWeightsSEXP = useWeights,
                                  weightThresholdSEXP = weightThreshold,
                                  useCRSEXP = useCR)
-  
+
     # prepare dispersions for storage in mcols(object)
-    dispMAP <- exp(dispResMAP$log_alpha) 
+    dispMAP <- exp(dispResMAP$log_alpha)
     dispIter <- dispResMAP$iter
-    
+
     # when lacking convergence from fitDisp() (C++)
     # we use a function to maximize dispersion parameter
     # along an adaptive grid (also C++)
@@ -1034,7 +1034,7 @@ estimateDispersionsMAP <- function(object, outlierSD=2, dispPriorVar,
                                      weightThresholdSEXP = weightThreshold,
                                      useCRSEXP=TRUE)
       dispMAP[refitDisp] <- dispGrid
-      
+
     }
   } else if (type == "glmGamPoi") {
     if (!requireNamespace("glmGamPoi", quietly=TRUE)) {
@@ -1044,24 +1044,24 @@ estimateDispersionsMAP <- function(object, outlierSD=2, dispPriorVar,
     gene_means <- mcols(objectNZ)$baseMean
     disp_est <- mcols(objectNZ)$dispGeneEst
     disp_trend <- mcols(objectNZ)$dispFit
-    shrink_res <- glmGamPoi::overdispersion_shrinkage(disp_est, gene_means = gene_means, 
+    shrink_res <- glmGamPoi::overdispersion_shrinkage(disp_est, gene_means = gene_means,
                                         df = ncol(objectNZ) - ncol(modelMatrix),
                                         disp_trend = disp_trend)
     dispFitCorrected <- (shrink_res$ql_disp_trend * (gene_means + gene_means^2 * disp_trend) - gene_means) / gene_means^2
     dispFitCorrected <- pmin(pmax(dispFitCorrected, minDisp), max(10, ncol(object)))
-    
+
     qlResultsList <- list(qlDispMLE = shrink_res$ql_disp_estimate,
                           qlDispFit = shrink_res$ql_disp_trend,
                           qlDispMAP = shrink_res$ql_disp_shrunken,
                           dispFitQLCorrected = dispFitCorrected)
-    
+
     qlDispDataFrame <- buildDataFrameWithNARows(qlResultsList, mcols(object)$allZero)
     mcols(qlDispDataFrame) <- DataFrame(type=rep("intermediate",ncol(qlDispDataFrame)),
                                       description=c("quasi likelihood dispersion MLE",
                                                     "quasi likelihood dispersion Trend",
                                                     "quasi likelihood dispersion MAP",
                                                     "dispersion trend corrected by quasi likelihood"))
-    
+
     mcols(object) <- cbind(mcols(object), qlDispDataFrame)
     attr( object, "quasiLikelihood_df0" ) <- shrink_res$ql_df0
     # Quick way to find alpha that would give same variance as shrunken quasi
@@ -1069,14 +1069,14 @@ estimateDispersionsMAP <- function(object, outlierSD=2, dispPriorVar,
     dispMAP <- (shrink_res$ql_disp_shrunken * (gene_means + gene_means^2 * disp_trend) - gene_means) / gene_means^2
     dispIter <- rep(0, length(dispMAP))
   }
-  
-  
+
+
   # bound the dispersion estimate between minDisp and maxDisp for numeric stability
   maxDisp <- max(10, ncol(object))
   dispMAP <- pmin(pmax(dispMAP, minDisp), maxDisp)
-  
+
   dispersionFinal <- dispMAP
-  
+
   # detect outliers which have gene-wise estimates
   # outlierSD * standard deviation of log gene-wise estimates
   # above the fitted mean (prior mean)
@@ -1088,7 +1088,7 @@ estimateDispersionsMAP <- function(object, outlierSD=2, dispPriorVar,
                  outlierSD * sqrt(varLogDispEsts)
   dispOutlier[is.na(dispOutlier)] <- FALSE
   dispersionFinal[dispOutlier] <- mcols(objectNZ)$dispGeneEst[dispOutlier]
- 
+
   resultsList <- list(dispersion = dispersionFinal,
                       dispIter = dispIter,
                       dispOutlier = dispOutlier,
@@ -1119,9 +1119,9 @@ estimateDispersionsPriorVar <- function(object, minDisp=1e-8, modelMatrix=NULL) 
   if (sum(aboveMinDisp,na.rm=TRUE) == 0) {
     stop("no data found which is greater than minDisp")
   }
-  
+
   varLogDispEsts <- attr(dispersionFunction(object), "varLogDispEsts")
-  
+
   m <- nrow(modelMatrix)
   p <- ncol(modelMatrix)
 
@@ -1130,7 +1130,7 @@ estimateDispersionsPriorVar <- function(object, minDisp=1e-8, modelMatrix=NULL) 
   # by the MAD. we then use an alternate estimator, a monte carlo
   # approach to match the distribution
   if (((m - p) <= 3) & (m > p)) {
-    # in order to produce identical results we set the seed, 
+    # in order to produce identical results we set the seed,
     # and so we need to save and restore the .Random.seed value first
     if (exists(".Random.seed")) {
       oldRandomSeed <- .Random.seed
@@ -1185,16 +1185,16 @@ estimateDispersionsPriorVar <- function(object, minDisp=1e-8, modelMatrix=NULL) 
 
 
 #' Wald test for the GLM coefficients
-#' 
+#'
 #' This function tests for significance of coefficients in a Negative
 #' Binomial GLM, using previously calculated \code{\link{sizeFactors}}
 #' (or \code{\link{normalizationFactors}})
 #' and dispersion estimates.  See \code{\link{DESeq}} for the GLM formula.
-#' 
+#'
 #' The fitting proceeds as follows: standard maximum likelihood estimates
 #' for GLM coefficients (synonymous with "beta", "log2 fold change", "effect size")
 #' are calculated.
-#' Then, optionally, a zero-centered Normal prior distribution 
+#' Then, optionally, a zero-centered Normal prior distribution
 #' (\code{betaPrior}) is assumed for the coefficients other than the intercept.
 #'
 #' Note that this posterior log2 fold change
@@ -1203,23 +1203,23 @@ estimateDispersionsPriorVar <- function(object, minDisp=1e-8, modelMatrix=NULL) 
 #' an additional function \code{link{lfcShrink}}.
 #'
 #' For calculating Wald test p-values, the coefficients are scaled by their
-#' standard errors and then compared to a standard Normal distribution. 
+#' standard errors and then compared to a standard Normal distribution.
 #' The \code{\link{results}}
 #' function without any arguments will automatically perform a contrast of the
 #' last level of the last variable in the design formula over the first level.
 #' The \code{contrast} argument of the \code{\link{results}} function can be used
 #' to generate other comparisons.
-#'  
+#'
 #' The Wald test can be replaced with the \code{\link{nbinomLRT}}
 #' for an alternative test of significance.
-#' 
+#'
 #' Notes on the log2 fold change prior:
-#' 
+#'
 #' The variance of the prior distribution for each
 #' non-intercept coefficient is calculated using the observed
-#' distribution of the maximum likelihood coefficients.  
+#' distribution of the maximum likelihood coefficients.
 #' The final coefficients are then maximum a posteriori estimates
-#' using this prior (Tikhonov/ridge regularization). 
+#' using this prior (Tikhonov/ridge regularization).
 #' See below for details on the
 #' prior variance and the Methods section of the DESeq2 manuscript for more detail.
 #' The use of a prior has little effect on genes with high counts and helps to
@@ -1238,7 +1238,7 @@ estimateDispersionsPriorVar <- function(object, minDisp=1e-8, modelMatrix=NULL) 
 #' overly influence the calculation of the prior variance.
 #' See \code{\link{estimateBetaPriorVar}}.
 #' The final prior variance for a factor level is the average of the
-#' estimated prior variance over all contrasts of all levels of the factor. 
+#' estimated prior variance over all contrasts of all levels of the factor.
 #'
 #' When a log2 fold change prior is used (betaPrior=TRUE),
 #' then \code{nbinomWaldTest} will by default use expanded model matrices,
@@ -1247,7 +1247,7 @@ estimateDispersionsPriorVar <- function(object, minDisp=1e-8, modelMatrix=NULL) 
 #' This ensures that log2 fold changes will be independent of the choice
 #' of reference level. In this case, the beta prior variance for each factor
 #' is calculated as the average of the mean squared maximum likelihood
-#' estimates for each level and every possible contrast. 
+#' estimates for each level and every possible contrast.
 #'
 #' @param object a DESeqDataSet
 #' @param betaPrior whether or not to put a zero-mean normal prior on
@@ -1315,7 +1315,7 @@ nbinomWaldTest <- function(object,
   stopifnot(length(maxit)==1)
   # in case the class of the mcols(mcols(object)) are not character
   object <- sanitizeRowRanges(object)
-  
+
   if ("results" %in% mcols(mcols(object))$type) {
     if (!quiet) message("found results columns, replacing these")
     object <- removeResults(object)
@@ -1323,7 +1323,7 @@ nbinomWaldTest <- function(object,
   if (is.null(mcols(object)$allZero)) {
     object <- getBaseMeansAndVariances(object)
   }
-  
+
   # only continue on the rows with non-zero row mean
   objectNZ <- object[!mcols(object)$allZero,,drop=FALSE]
 
@@ -1413,7 +1413,7 @@ nbinomWaldTest <- function(object,
   dimnames(H) <- NULL
   assays(objectNZ, withDimnames=FALSE)[["H"]] <- H
   assays(object, withDimnames=FALSE)[["H"]] <- buildMatrixWithNARows(H, mcols(object)$allZero)
-  
+
   # store the prior variance directly as an attribute
   # of the DESeqDataSet object, so it can be pulled later by
   # the results function (necessary for setting max Cook's distance)
@@ -1436,7 +1436,7 @@ nbinomWaldTest <- function(object,
 
   # store Cook's distance for each sample
   assays(object, withDimnames=FALSE)[["cooks"]] <- buildMatrixWithNARows(cooks, mcols(object)$allZero)
-  
+
   # add betas, standard errors and Wald p-values to the object
   modelMatrixNames <- colnames(modelMatrix)
   betaMatrix <- fit$betaMatrix
@@ -1449,7 +1449,7 @@ nbinomWaldTest <- function(object,
   #################################
   ## t distribution for p-values ##
   #################################
-  
+
   if (useT) {
     # if the `df` was provided to nbinomWaldTest...
     if (!missing(df)) {
@@ -1482,7 +1482,7 @@ nbinomWaldTest <- function(object,
     WaldPvalue <- 2*pnorm(abs(WaldStatistic),lower.tail=FALSE)
   }
   colnames(WaldPvalue) <- paste0("WaldPvalue_",modelMatrixNames)
-  
+
   betaConv <- fit$betaConv
 
   if (any(!betaConv)) {
@@ -1497,7 +1497,7 @@ nbinomWaldTest <- function(object,
 
   # if useT need to add the t degrees of freedom to the end of resultsList
   tDFList <- if (useT) list(tDegreesFreedom=df) else NULL
-  
+
   resultsList <- c(matrixToList(betaMatrix),
                    matrixToList(betaSE),
                    mleBetas,
@@ -1508,9 +1508,9 @@ nbinomWaldTest <- function(object,
                         deviance = -2 * fit$logLike,
                         maxCooks = maxCooks),
                    tDFList)
-  
+
   WaldResults <- buildDataFrameWithNARows(resultsList, mcols(object)$allZero)
-  
+
   modelMatrixNamesSpaces <- gsub("_"," ",modelMatrixNames)
 
   lfcType <- if (attr(object,"betaPrior")) "MAP" else "MLE"
@@ -1524,7 +1524,7 @@ nbinomWaldTest <- function(object,
   statInfo <- paste("Wald statistic:",modelMatrixNamesSpaces)
   pvalInfo <- paste("Wald test p-value:",modelMatrixNamesSpaces)
 
-  tDFDescription <- if (useT) "t degrees of freedom for Wald test" else NULL  
+  tDFDescription <- if (useT) "t degrees of freedom for Wald test" else NULL
   mcolsWaldResults <- DataFrame(type = rep("results",ncol(WaldResults)),
                                   description = c(coefInfo, seInfo, mleInfo, statInfo, pvalInfo,
                                     "convergence of betas",
@@ -1532,9 +1532,9 @@ nbinomWaldTest <- function(object,
                                     "deviance for the fitted model",
                                     "maximum Cook's distance for row",
                                     tDFDescription))
-  
+
   mcols(WaldResults) <- mcolsWaldResults
- 
+
   mcols(object) <- cbind(mcols(object),WaldResults)
   return(object)
 }
@@ -1555,7 +1555,7 @@ nbinomWaldTest <- function(object,
 #' @param useOptim as defined in \code{link{nbinomWaldTest}}
 #' @param useQR as defined in \code{link{nbinomWaldTest}}
 #' @param modelMatrixType an optional override for the type which is set internally
-#' 
+#'
 #' @param betaPriorMethod the method for calculating the beta prior variance,
 #' either "quanitle" or "weighted":
 #' "quantile" matches a normal distribution using the upper quantile of the finite MLE betas.
@@ -1564,16 +1564,16 @@ nbinomWaldTest <- function(object,
 #' "quantile" or "weighted" method of beta prior variance estimation
 #' @param modelMatrix an optional matrix, typically this is set to NULL
 #' and created within the function
-#' 
+#'
 #' @return for \code{estimateMLEForBetaPriorVar}, a DESeqDataSet, with the
 #' necessary information stored in order to calculate the prior variance.
 #' for \code{estimateBetaPriorVar}, the vector of variances for the prior
 #' on the betas in the \code{\link{DESeq}} GLM
 #'
 #' @aliases estimateBetaPriorVar estimateMLEForBetaPriorVar
-#' 
+#'
 #' @export
-estimateBetaPriorVar <- function(object, 
+estimateBetaPriorVar <- function(object,
                                  betaPriorMethod=c("weighted","quantile"),
                                  upperQuantile=0.05,
                                  modelMatrix=NULL) {
@@ -1594,13 +1594,13 @@ estimateBetaPriorVar <- function(object,
     }
   })
   colnames(betaMatrix) <- colnamesBM
-  
+
   # this is the model matrix from an MLE run
   if (is.null(modelMatrix)) {
     modelMatrix <- getModelMatrix(object)
   }
   modelMatrixType <- attr(object, "modelMatrixType")
-  
+
   betaPriorMethod <- match.arg(betaPriorMethod, choices=c("weighted","quantile"))
 
   # estimate the variance of the prior on betas
@@ -1619,7 +1619,7 @@ estimateBetaPriorVar <- function(object,
   }
   varlogk <- 1/mcols(objectNZ)$baseMean + dispFit
   weights <- 1/varlogk
-  
+
   betaPriorVar <- if (nrow(betaMatrix) > 1) {
     apply(betaMatrix, 2, function(x) {
       # this test removes genes which have betas
@@ -1640,7 +1640,7 @@ estimateBetaPriorVar <- function(object,
     (betaMatrix)^2
   }
   names(betaPriorVar) <- colnames(betaMatrix)
-  
+
   # intercept set to wide prior
   if ("Intercept" %in% names(betaPriorVar)) {
     betaPriorVar[which(names(betaPriorVar) == "Intercept")] <- 1e6
@@ -1651,7 +1651,7 @@ estimateBetaPriorVar <- function(object,
   if ("(Intercept)" %in% names(betaPriorVar)) {
     betaPriorVar[which(names(betaPriorVar) == "(Intercept)")] <- 1e6
   }
-  
+
   if (modelMatrixType == "expanded") {
     # bring over beta priors from the GLM fit without prior.
     # for factors: prior variance of each level are the average of the
@@ -1659,7 +1659,7 @@ estimateBetaPriorVar <- function(object,
     betaPriorExpanded <- averagePriorsOverLevels(objectNZ, betaPriorVar)
     betaPriorVar <- betaPriorExpanded
   }
-  
+
   betaPriorVar
 }
 
@@ -1668,7 +1668,7 @@ estimateBetaPriorVar <- function(object,
 estimateMLEForBetaPriorVar <- function(object, maxit=100, useOptim=TRUE, useQR=TRUE,
                                        modelMatrixType=NULL) {
   # this function copies code from other functions,
-  # in order to allow parallelization  
+  # in order to allow parallelization
   objectNZ <- object[!mcols(object)$allZero,,drop=FALSE]
 
   if (is.null(modelMatrixType)) {
@@ -1690,11 +1690,11 @@ estimateMLEForBetaPriorVar <- function(object, maxit=100, useOptim=TRUE, useQR=T
   modelMatrixNames <- colnames(modelMatrix)
   H <- fit$hat_diagonal
   betaMatrix <- fit$betaMatrix
- 
+
   modelMatrixNames[modelMatrixNames == "(Intercept)"] <- "Intercept"
   modelMatrixNames <- make.names(modelMatrixNames)
   colnames(betaMatrix) <- modelMatrixNames
-  
+
   convertNames <- renameModelMatrixColumns(colData(object),
                                            design(objectNZ))
   convertNames <- convertNames[convertNames$from %in% modelMatrixNames,,drop=FALSE]
@@ -1714,7 +1714,7 @@ estimateMLEForBetaPriorVar <- function(object, maxit=100, useOptim=TRUE, useQR=T
 #' full and reduced model which are provided as \code{formula}.
 #' Fitting uses previously calculated \code{\link{sizeFactors}} (or \code{\link{normalizationFactors}})
 #' and dispersion estimates.
-#' 
+#'
 #' The difference in deviance is compared to a chi-squared distribution
 #' with df = (reduced residual degrees of freedom - full residual degrees of freedom).
 #' This function is comparable to the \code{nbinomGLMTest} of the previous version of DESeq
@@ -1743,11 +1743,11 @@ estimateMLEForBetaPriorVar <- function(object, maxit=100, useOptim=TRUE, useQR=T
 #' on the F-distribution is conducted. It is supposed to be more accurate, because
 #' it takes the uncertainty of dispersion estimate into account in the same way
 #' that a t-test improves upon a Z-test.
-#' 
+#'
 #' @return a DESeqDataSet with new results columns accessible
 #' with the \code{\link{results}} function.  The coefficients and standard errors are
 #' reported on a log2 scale.
-#' 
+#'
 #' @seealso \code{\link{DESeq}}, \code{\link{nbinomWaldTest}}
 #'
 #' @examples
@@ -1764,7 +1764,7 @@ nbinomLRT <- function(object, full=design(object), reduced,
                       useQR=TRUE,
                       minmu=if (type=="glmGamPoi") 1e-6 else 0.5,
                       type = c("DESeq2", "glmGamPoi")) {
-  
+
   type <- match.arg(type, c("DESeq2", "glmGamPoi"))
   if (is.null(dispersions(object))) {
     stop("testing requires dispersion estimates, first call estimateDispersions()")
@@ -1775,7 +1775,7 @@ nbinomLRT <- function(object, full=design(object), reduced,
 
   # in case the class of the mcols(mcols(object)) are not character
   object <- sanitizeRowRanges(object)
-  
+
   # run check on the formula
   modelAsFormula <- !(is.matrix(full) & is.matrix(reduced))
   if (modelAsFormula) {
@@ -1783,7 +1783,7 @@ nbinomLRT <- function(object, full=design(object), reduced,
 
     # run some tests common to DESeq, nbinomWaldTest, nbinomLRT
     designAndArgChecker(object, betaPrior=FALSE)
-    
+
     # try to form model matrices, test for difference
     # in residual degrees of freedom
     fullModelMatrix <- stats::model.matrix.default(full, data=as.data.frame(colData(object)))
@@ -1792,18 +1792,18 @@ nbinomLRT <- function(object, full=design(object), reduced,
   } else {
     df <- ncol(full) - ncol(reduced)
   }
-  
+
   if (df < 1) stop("less than one degree of freedom, perhaps full and reduced models are not in the correct order")
-  
+
   if (any(mcols(mcols(object))$type == "results")) {
     if (!quiet) message("found results columns, replacing these")
     object <- removeResults(object)
-  } 
+  }
 
   if (is.null(mcols(object)$allZero)) {
     object <- getBaseMeansAndVariances(object)
   }
-  
+
   if (modelAsFormula) {
     modelMatrixType <- "standard"
     # check for intercept
@@ -1847,38 +1847,38 @@ nbinomLRT <- function(object, full=design(object), reduced,
                                     warnNonposVar=FALSE, minmu=minmu)
       reducedModelMatrix <- reduced
     }
-    
+
     # calculate LRT statistic and p-values
     LRTStatistic <- (2 * (fullModel$logLike - reducedModel$logLike))
     LRTPvalue <- pchisq(LRTStatistic, df=df, lower.tail=FALSE)
-    
+
     deviance <- -2 * fullModel$logLike
-    
+
     ### Handle Hat matrix and Cook distances
     H <- fullModel$hat_diagonals
-    
+
     # calculate Cook's distance
     dispModelMatrix <- modelMatrix
     attr(object,"dispModelMatrix") <- dispModelMatrix
     cooks <- calculateCooksDistance(objectNZ, H, dispModelMatrix)
-    
+
     # record maximum of Cook's
     maxCooks <- recordMaxCooks(design(object), colData(object), dispModelMatrix, cooks, nrow(objectNZ))
-    
+
     # store hat matrix diagonals
     assays(object, withDimnames=FALSE)[["H"]] <- buildMatrixWithNARows(H, mcols(object)$allZero)
-    
+
     # store Cook's distance for each sample
     assays(object, withDimnames=FALSE)[["cooks"]] <- buildMatrixWithNARows(cooks, mcols(object)$allZero)
   } else if (type == "glmGamPoi") {
 
     disp_trend <- mcols(objectNZ)$dispFit
-    
+
     # check for normalization factors, if missing use size factors
     if (is.null(normalizationFactors(objectNZ))) {
       sf <- sizeFactors(objectNZ)
       fit_full <- glmGamPoi::glm_gp(objectNZ, design = full,
-                                    size_factors = sf, 
+                                    size_factors = sf,
                                     overdispersion = disp_trend,
                                     overdispersion_shrinkage = FALSE)
     } else {
@@ -1900,17 +1900,17 @@ nbinomLRT <- function(object, full=design(object), reduced,
            "type \"glmGamPoi\"")
     }
     qlr <- glmGamPoi::test_de(fit_full, reduced = reduced, verbose = ! quiet)
-    
+
     LRTStatistic <- qlr$f_statistic
     LRTPvalue <- qlr$pval
-    
+
     modelMatrix <- fit_full$model_matrix
     reducedModelMatrix <- if (is.matrix(reduced)) {
       reduced
     } else {
       stats::model.matrix.default(reduced, data=as.data.frame(colData(objectNZ)))
     }
-    
+
     fullModel <- list(betaMatrix = fit_full$Beta / log(2), # Make sure Beta are on log2-scale
                       betaSE = array(NA, dim(fit_full$Beta), dimnames = list(rownames(fit_full$Beta), paste0("SE_",colnames(fit_full$Beta)))),
                       mu = fit_full$Mu, betaConv = rep(TRUE, nrow(objectNZ)), betaIter = rep(NA, nrow(objectNZ)))
@@ -1920,9 +1920,9 @@ nbinomLRT <- function(object, full=design(object), reduced,
     dispModelMatrix <- modelMatrix
     attr(object,"dispModelMatrix") <- dispModelMatrix
   }
-  
+
   betaPriorVar <- rep(1e6, ncol(modelMatrix))
-    
+
   attr(object,"betaPrior") <- FALSE
   attr(object,"betaPriorVar") <- betaPriorVar
   attr(object,"modelMatrix") <- modelMatrix
@@ -1934,16 +1934,16 @@ nbinomLRT <- function(object, full=design(object), reduced,
   assays(objectNZ, withDimnames=FALSE)[["mu"]] <- fullModel$mu
   assays(object, withDimnames=FALSE)[["mu"]] <- buildMatrixWithNARows(fullModel$mu, mcols(object)$allZero)
 
-  
+
   if (any(!fullModel$betaConv)) {
     if (!quiet) message(paste(sum(!fullModel$betaConv),"rows did not converge in beta, labelled in mcols(object)$fullBetaConv. Use larger maxit argument with nbinomLRT"))
   }
 
- 
-  
+
+
   # no need to store additional betas (no beta prior)
   mleBetas <- NULL
-  
+
   # continue storing LRT results
   resultsList <- c(matrixToList(fullModel$betaMatrix),
                    matrixToList(fullModel$betaSE),
@@ -1975,14 +1975,14 @@ nbinomLRT <- function(object, full=design(object), reduced,
 
   mcols(LRTResults) <- DataFrame(type = rep("results",ncol(LRTResults)),
                                  description = c(coefInfo, seInfo, mleInfo,
-                                   statInfo, pvalInfo, 
+                                   statInfo, pvalInfo,
                                    "convergence of betas for full model",
                                    "convergence of betas for reduced model",
                                    "iterations for betas for full model",
                                    "deviance of the full model",
                                    "maximum Cook's distance for row"))
   mcols(object) <- cbind(mcols(object),LRTResults)
-  
+
   return(object)
 }
 
@@ -1992,7 +1992,7 @@ nbinomLRT <- function(object, full=design(object), reduced,
 #' Note that this function is called within \code{\link{DESeq}}, so is not
 #' necessary to call on top of a \code{DESeq} call. See the \code{minReplicatesForReplace}
 #' argument documented in \code{link{DESeq}}.
-#' 
+#'
 #' This function replaces outlier counts flagged by extreme Cook's distances,
 #' as calculated by \code{\link{DESeq}}, \code{\link{nbinomWaldTest}}
 #' or \code{\link{nbinomLRT}}, with values predicted by the trimmed mean
@@ -2000,12 +2000,12 @@ nbinomLRT <- function(object, full=design(object), reduced,
 #' This function replaces the counts in the matrix returned by \code{counts(dds)}
 #' and the Cook's distances in \code{assays(dds)[["cooks"]]}. Original counts are
 #' preserved in \code{assays(dds)[["originalCounts"]]}.
-#' 
+#'
 #' The \code{\link{DESeq}} function calculates a diagnostic measure called
 #' Cook's distance for every gene and every sample. The \code{\link{results}}
 #' function then sets the p-values to \code{NA} for genes which contain
 #' an outlying count as defined by a Cook's distance above a threshold.
-#' With many degrees of freedom, i.e. many more samples than number of parameters to 
+#' With many degrees of freedom, i.e. many more samples than number of parameters to
 #' be estimated-- it might be undesirable to remove entire genes from the analysis
 #' just because their data include a single count outlier.
 #' An alternate strategy is to replace the outlier counts
@@ -2015,7 +2015,7 @@ nbinomLRT <- function(object, full=design(object), reduced,
 #' of replicates (including that sample).
 #' For more information on Cook's distance, please see the two
 #' sections of the vignette: 'Dealing with count outliers' and 'Count outlier detection'.
-#' 
+#'
 #' @param object a DESeqDataSet object, which has already been processed by
 #' either DESeq, nbinomWaldTest or nbinomLRT, and therefore contains a matrix
 #' contained in \code{assays(dds)[["cooks"]]}. These are the Cook's distances which will
@@ -2035,11 +2035,11 @@ nbinomLRT <- function(object, full=design(object), reduced,
 #' @seealso \code{\link{DESeq}}
 #'
 #' @aliases replaceOutliersWithTrimmedMean
-#' 
+#'
 #' @return a DESeqDataSet with replaced counts in the slot returned by
 #' \code{\link{counts}} and the original counts preserved in
 #' \code{assays(dds)[["originalCounts"]]}
-#' 
+#'
 #' @export
 replaceOutliers <- function(object, trim=.2, cooksCutoff, minReplicates=7, whichSamples) {
   if (is.null(attr(object,"modelMatrix")) | !("cooks" %in% assayNames(object))) {
@@ -2064,16 +2064,16 @@ replaceOutliers <- function(object, trim=.2, cooksCutoff, minReplicates=7, which
   trimBaseMean <- apply(counts(object,normalized=TRUE),1,mean,trim=trim)
   # build a matrix of counts based on the trimmed mean and the size factors
   replacementCounts <- if (!is.null(normalizationFactors(object))) {
-    as.integer(matrix(rep(trimBaseMean,ncol(object)),ncol=ncol(object)) * 
+    as.integer(matrix(rep(trimBaseMean,ncol(object)),ncol=ncol(object)) *
                normalizationFactors(object))
   } else {
     as.integer(outer(trimBaseMean, sizeFactors(object), "*"))
   }
-  
+
   # replace only those values which fall above the cutoff on Cook's distance
   newCounts <- counts(object)
   newCounts[idx] <- replacementCounts[idx]
-  
+
   if (missing(whichSamples)) {
     whichSamples <- nOrMoreInCell(attr(object,"modelMatrix"), n = minReplicates)
   }
@@ -2095,7 +2095,7 @@ replaceOutliersWithTrimmedMean <- replaceOutliers
 
 
 ###########################################################
-# unexported functons 
+# unexported functons
 ###########################################################
 
 
@@ -2154,7 +2154,7 @@ parametricDispersionFit <- function( means, disps ) {
       if ( ( sum( log( coefs / oldcoefs )^2 ) < 1e-6 )  & fit$converged )
          break
       iter <- iter + 1
-      if ( iter > 10 ) 
+      if ( iter > 10 )
         stop(simpleError("dispersion fit did not converge"))
     }
    names( coefs ) <- c( "asymptDisp", "extraPois" )
@@ -2187,7 +2187,7 @@ nbinomLogLike <- function(counts, mu, disp, weights, useWeights) {
                            log=TRUE),ncol=ncol(counts)))
   } else {
     rowSums(matrix(dnbinom(counts,mu=mu,size=1/disp,
-                           log=TRUE),ncol=ncol(counts)))    
+                           log=TRUE),ncol=ncol(counts)))
   }
 }
 
@@ -2196,7 +2196,7 @@ nbinomLogLike <- function(counts, mu, disp, weights, useWeights) {
 getSizeOrNormFactors <- function(object) {
   if (!is.null(normalizationFactors(object))) {
     return(normalizationFactors(object))
-  } else { 
+  } else {
     return(matrix(rep(sizeFactors(object),each=nrow(object)),
              ncol=ncol(object)))
   }
@@ -2399,13 +2399,13 @@ roughDispEstimate <- function(y, x) {
   # must be positive
   mu <- linearModelMu(y, x)
   mu <- matrix(pmax(1, mu), ncol=ncol(mu))
-  
+
   m <- nrow(x)
   p <- ncol(x)
 
   # an alternate rough estimator with higher mean squared or absolute error
   # (rowSums( (y - mu)^2/(mu * (m - p)) ) - 1)/rowMeans(mu)
-  
+
   # rough disp ests will be adjusted up to minDisp later
   est <- rowSums( ((y - mu)^2 - mu) / mu^2 ) / (m - p)
   pmax(est, 0)
@@ -2427,8 +2427,8 @@ modelMatrixGroups <- function(x) {
 }
 
 linearModelMu <- function(y, x) {
-  qrx <- qr(x)    
-  Q <- qr.Q(qrx)  
+  qrx <- qr(x)
+  Q <- qr.Q(qrx)
   Rinv <- solve(qr.R(qrx))
   # old code:
   # hatmatrix <- x %*% Rinv %*% t(Q)
@@ -2473,7 +2473,7 @@ refitWithoutOutliers <- function(object, test, betaPrior, full, reduced,
     if (!quiet) message(paste("-- replacing outliers and refitting for", nrefit,"genes
 -- DESeq argument 'minReplicatesForReplace' =",minReplicatesForReplace,"
 -- original counts are preserved in counts(dds)"))
-    
+
     # refit on those rows which had replacement
     refitReplace <- which(mcols(object)$replace & !mcols(object)$allZero)
     objectSub <- object[refitReplace,]
@@ -2483,7 +2483,7 @@ refitWithoutOutliers <- function(object, test, betaPrior, full, reduced,
     # estimate gene-wise dispersion
     if (!quiet) message("estimating dispersions")
     objectSub <- estimateDispersionsGeneEst(objectSub, quiet=quiet, modelMatrix=modelMatrix)
-    
+
     # need to redo fitted dispersion due to changes in base mean
     mcols(objectSub)$dispFit <- dispersionFunction(objectSub)(mcols(objectSub)$baseMean)
     mcols(mcols(objectSub),use.names=TRUE)["dispFit",] <- DataFrame(type="intermediate",
@@ -2505,11 +2505,11 @@ refitWithoutOutliers <- function(object, test, betaPrior, full, reduced,
     } else if (test == "LRT") {
       objectSub <- nbinomLRT(objectSub, full=full, reduced=reduced, quiet=quiet)
     }
-    
+
     idx <- match(names(mcols(objectSub)), names(mcols(object)))
     mcols(object)[refitReplace, idx] <- mcols(objectSub)
     mcols(object)[newAllZero, mcols(mcols(object))$type == "results"] <- NA
-    
+
     # continue to flag if some conditions have less than minReplicatesForReplace
     if (all(object$replaceable)) {
       mcols(object)$maxCooks <- NA
@@ -2520,7 +2520,7 @@ refitWithoutOutliers <- function(object, test, betaPrior, full, reduced,
                                                attr(object,"dispModelMatrix"), replaceCooks, nrow(object))
     }
   }
-  
+
   if ( nrefit > 0 ) {
     # save the counts used for fitting as replaceCounts
     assays(object, withDimnames=FALSE)[["replaceCounts"]] <- counts(object)
@@ -2529,11 +2529,11 @@ refitWithoutOutliers <- function(object, test, betaPrior, full, reduced,
     # preserve original counts and Cook's distances
     counts(object) <- assays(object)[["originalCounts"]]
     assays(object, withDimnames=FALSE)[["cooks"]] <- cooks
-    
+
     # no longer need this assay slot
     assays(object)[["originalCounts"]] <- NULL
   }
-  
+
   object
 }
 
@@ -2636,7 +2636,7 @@ designAndArgChecker <- function(object, betaPrior) {
     if (q$rank < ncol(mm))
       stop("full model matrix is less than full rank")
   }
-  
+
   design <- design(object)
   designVars <- all.vars(design)
   if (length(designVars) > 0) {
@@ -2734,8 +2734,8 @@ getAndCheckWeights <- function(object, modelMatrix, weightThreshold=1e-2) {
 # to avoid extra package dependencies in DESeq2 (same license as Hmisc),
 # with the alteration of commenting out `isdate` test
 # https://cran.r-project.org/package=Hmisc
-Hmisc.wtd.quantile <- function(x, weights=NULL, probs=c(0, .25, .5, .75, 1), 
-                         type=c('quantile','(i-1)/(n-1)','i/(n+1)','i/n'), 
+Hmisc.wtd.quantile <- function(x, weights=NULL, probs=c(0, .25, .5, .75, 1),
+                         type=c('quantile','(i-1)/(n-1)','i/(n+1)','i/n'),
                          normwt=FALSE, na.rm=TRUE)
 {
   if(! length(weights))
@@ -2745,8 +2745,8 @@ Hmisc.wtd.quantile <- function(x, weights=NULL, probs=c(0, .25, .5, .75, 1),
   if(any(probs < 0 | probs > 1))
     stop("Probabilities must be between 0 and 1 inclusive")
 
-  nams <- paste(format(round(probs * 100, if(length(probs) > 1) 
-                             2 - log10(diff(range(probs))) else 2)), 
+  nams <- paste(format(round(probs * 100, if(length(probs) > 1)
+                             2 - log10(diff(range(probs))) else 2)),
                 "%", sep = "")
 
   i <- is.na(weights) | weights == 0
@@ -2765,21 +2765,21 @@ Hmisc.wtd.quantile <- function(x, weights=NULL, probs=c(0, .25, .5, .75, 1),
     order <- order %% 1
     ## Find low and high order statistics
     ## These are minimum values of x such that the cum. freqs >= c(low,high)
-    allq <- approx(cumsum(wts), x, xout=c(low,high), 
+    allq <- approx(cumsum(wts), x, xout=c(low,high),
                    method='constant', f=1, rule=2)$y
     k <- length(probs)
     quantiles <- (1 - order)*allq[1:k] + order*allq[-(1:k)]
     names(quantiles) <- nams
     return(quantiles)
-  } 
+  }
   w <- Hmisc.wtd.Ecdf(x, weights, na.rm=na.rm, type=type, normwt=normwt)
-  structure(approx(w$ecdf, w$x, xout=probs, rule=2)$y, 
+  structure(approx(w$ecdf, w$x, xout=probs, rule=2)$y,
             names=nams)
 }
 
 
-Hmisc.wtd.Ecdf <- function(x, weights=NULL, 
-                     type=c('i/n','(i-1)/(n-1)','i/(n+1)'), 
+Hmisc.wtd.Ecdf <- function(x, weights=NULL,
+                     type=c('i/n','(i-1)/(n-1)','i/(n+1)'),
                      normwt=FALSE, na.rm=TRUE)
 {
   type <- match.arg(type)
@@ -2816,7 +2816,7 @@ Hmisc.wtd.Ecdf <- function(x, weights=NULL,
 }
 
 
-Hmisc.wtd.table <- function(x, weights=NULL, type=c('list','table'), 
+Hmisc.wtd.table <- function(x, weights=NULL, type=c('list','table'),
                       normwt=FALSE, na.rm=TRUE)
 {
   type <- match.arg(type)
@@ -2826,11 +2826,11 @@ Hmisc.wtd.table <- function(x, weights=NULL, type=c('list','table'),
   #isdate <- testDateTime(x)  ## 31aug02 + next 2
   ax <- attributes(x)
   ax$names <- NULL
-  
+
   if(is.character(x)) x <- as.factor(x)
   lev <- levels(x)
   x <- unclass(x)
-  
+
   if(na.rm) {
     s <- ! is.na(x + weights)
     x <- x[s, drop=FALSE]    ## drop is for factor class
@@ -2879,7 +2879,7 @@ Hmisc.wtd.table <- function(x, weights=NULL, type=c('list','table'),
 
   if(type=='list')
     list(x=if(length(lev))lev[x]
-           else xx, 
+           else xx,
          sum.of.weights=weights)
   else {
     names(weights) <- if(length(lev)) lev[x]

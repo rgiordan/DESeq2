@@ -26,12 +26,13 @@
 #
 # return a list of results, with coefficients and standard
 # errors on the log2 scale
+#' @export
 fitNbinomGLMs <- function(object, modelMatrix=NULL, modelFormula, alpha_hat, lambda,
                           renameCols=TRUE, betaTol=1e-8, maxit=100, useOptim=TRUE,
                           useQR=TRUE, forceOptim=FALSE, warnNonposVar=TRUE, minmu=0.5,
                           type = c("DESeq2", "glmGamPoi")) {
   type <- match.arg(type, c("DESeq2", "glmGamPoi"))
-  
+
   if (missing(modelFormula)) {
     modelFormula <- design(object)
   }
@@ -49,7 +50,7 @@ fitNbinomGLMs <- function(object, modelMatrix=NULL, modelFormula, alpha_hat, lam
   modelMatrixNames <- colnames(modelMatrix)
   modelMatrixNames[modelMatrixNames == "(Intercept)"] <- "Intercept"
   modelMatrixNames <- make.names(modelMatrixNames)
-  
+
   if (renameCols) {
     convertNames <- renameModelMatrixColumns(colData(object),
                                              modelFormula)
@@ -57,9 +58,9 @@ fitNbinomGLMs <- function(object, modelMatrix=NULL, modelFormula, alpha_hat, lam
     modelMatrixNames[match(convertNames$from, modelMatrixNames)] <- convertNames$to
   }
   colnames(modelMatrix) <- modelMatrixNames
-  
+
   normalizationFactors <- getSizeOrNormFactors(object)
-  
+
   if (missing(alpha_hat)) {
     alpha_hat <- dispersions(object)
   }
@@ -77,10 +78,10 @@ fitNbinomGLMs <- function(object, modelMatrix=NULL, modelFormula, alpha_hat, lam
   wlist <- getAndCheckWeights(object, modelMatrix)
   weights <- wlist$weights
   useWeights <- wlist$useWeights
-  
+
   if(type == "glmGamPoi"){
     stopifnot("type = 'glmGamPoi' cannot handle weights" = ! useWeights,
-              "type = 'glmGamPoi' does not support NA's in alpha_hat" = all(! is.na(alpha_hat))) 
+              "type = 'glmGamPoi' does not support NA's in alpha_hat" = all(! is.na(alpha_hat)))
     gp_res <- glmGamPoi::glm_gp(counts(object), design = modelMatrix,
                                 size_factors = FALSE, offset = log(normalizationFactors),
                                 overdispersion = alpha_hat, verbose = FALSE)
@@ -88,11 +89,11 @@ fitNbinomGLMs <- function(object, modelMatrix=NULL, modelFormula, alpha_hat, lam
     logLike <- rowSums(logLikeMat)
     res <- list(logLike = logLike, betaConv =  rep(TRUE, nrow(object)), betaMatrix = gp_res$Beta / log(2),
                 betaSE = NULL, mu = gp_res$Mu, betaIter = rep(NA,nrow(object)),
-                modelMatrix=modelMatrix, 
+                modelMatrix=modelMatrix,
                 nterms=ncol(modelMatrix), hat_diagonals = NULL)
     return(res)
   }
-  
+
   # bypass the beta fitting if the model formula is only intercept and
   # the prior variance is large (1e6)
   # i.e., LRT with reduced ~ 1 and no beta prior
@@ -127,15 +128,15 @@ fitNbinomGLMs <- function(object, modelMatrix=NULL, modelFormula, alpha_hat, lam
            }
       xtwx <- rowSums(w)
       sigma <- xtwx^-1
-      betaSE <- matrix(log2(exp(1)) * sqrt(sigma),ncol=1)      
+      betaSE <- matrix(log2(exp(1)) * sqrt(sigma),ncol=1)
       hat_diagonals <- w * xtwx^-1;
       res <- list(logLike = logLike, betaConv = betaConv, betaMatrix = betaMatrix,
                   betaSE = betaSE, mu = mu, betaIter = betaIter,
-                  modelMatrix=modelMatrix, 
+                  modelMatrix=modelMatrix,
                   nterms=1, hat_diagonals=hat_diagonals)
       return(res)
   }
-  
+
   qrx <- qr(modelMatrix)
   # if full rank, estimate initial betas for IRLS below
   if (qrx$rank == ncol(modelMatrix)) {
@@ -153,14 +154,14 @@ fitNbinomGLMs <- function(object, modelMatrix=NULL, modelFormula, alpha_hat, lam
       beta_mat <- matrix(1, ncol=ncol(modelMatrix), nrow=nrow(object))
     }
   }
-  
+
   # here we convert from the log2 scale of the betas
   # and the beta prior variance to the log scale
   # used in fitBeta.
   # so we divide by the square of the
   # conversion factor, log(2)
   lambdaNatLogScale <- lambda / log(2)^2
-  
+
   betaRes <- fitBetaWrapper(ySEXP = counts(object), xSEXP = modelMatrix,
                             nfSEXP = normalizationFactors,
                             alpha_hatSEXP = alpha_hat,
@@ -176,7 +177,7 @@ fitNbinomGLMs <- function(object, modelMatrix=NULL, modelFormula, alpha_hat, lam
   # the log likelihood below and use -2 * logLike.
   # (reason is that we have other ways of estimating beta:
   # above intercept code, and below optim code)
-  
+
   mu <- normalizationFactors * t(exp(modelMatrix %*% t(betaRes$beta_mat)))
   dispersionVector <- rep(dispersions(object), times=ncol(object))
   logLike <- nbinomLogLike(counts(object), mu, dispersions(object), weights, useWeights)
@@ -186,10 +187,10 @@ fitNbinomGLMs <- function(object, modelMatrix=NULL, modelFormula, alpha_hat, lam
 
   # test for positive variances
   rowVarPositive <- apply(betaRes$beta_var_mat,1,function(row) sum(row <= 0)) == 0
-  
+
   # test for convergence, stability and positive variances
   betaConv <- betaRes$iter < maxit
-  
+
   # here we transform the betaMatrix and betaSE to a log2 scale
   betaMatrix <- log2(exp(1))*betaRes$beta_mat
   colnames(betaMatrix) <- modelMatrixNames
@@ -205,11 +206,12 @@ fitNbinomGLMs <- function(object, modelMatrix=NULL, modelFormula, alpha_hat, lam
   } else {
     which(!rowStable | !rowVarPositive)
   }
-  
+
   if (forceOptim) {
     rowsForOptim <- seq_along(betaConv)
   }
-  
+
+  objectiveFnList <- NULL
   if (length(rowsForOptim) > 0) {
     # we use optim if didn't reach convergence with the IRLS code
     resOptim <- fitNbinomGLMsOptim(object,modelMatrix,lambda,
@@ -224,15 +226,17 @@ fitNbinomGLMs <- function(object, modelMatrix=NULL, modelFormula, alpha_hat, lam
     betaConv <- resOptim$betaConv
     mu <- resOptim$mu
     logLike <- resOptim$logLike
+    objectiveFnList <- resOptim$objectiveFnList
   }
 
   stopifnot(!any(is.na(betaSE)))
   nNonposVar <- sum(rowSums(betaSE == 0) > 0)
   if (warnNonposVar & nNonposVar > 0) warning(nNonposVar,"rows had non-positive estimates of variance for coefficients")
-  
+
   list(logLike = logLike, betaConv = betaConv, betaMatrix = betaMatrix,
-       betaSE = betaSE, mu = mu, betaIter = betaRes$iter, modelMatrix=modelMatrix, 
-       nterms=ncol(modelMatrix), hat_diagonals=betaRes$hat_diagonals)
+       betaSE = betaSE, mu = mu, betaIter = betaRes$iter, modelMatrix=modelMatrix,
+       nterms=ncol(modelMatrix), hat_diagonals=betaRes$hat_diagonals,
+       objectiveFnList=objectiveFnList)
 }
 
 # this function calls fitNbinomGLMs() twice:
@@ -240,7 +244,7 @@ fitNbinomGLMs <- function(object, modelMatrix=NULL, modelFormula, alpha_hat, lam
 #     beta prior variance and hat matrix
 # 2 - again but with the prior in order to get beta matrix and standard errors
 fitGLMsWithPrior <- function(object, betaTol, maxit, useOptim, useQR, betaPriorVar, modelMatrix=NULL, minmu=0.5) {
-  
+
   objectNZ <- object[!mcols(object)$allZero,,drop=FALSE]
   modelMatrixType <- attr(object, "modelMatrixType")
 
@@ -249,7 +253,7 @@ fitGLMsWithPrior <- function(object, betaTol, maxit, useOptim, useQR, betaPriorV
     # stop unless modelMatrix was NOT supplied, the code below all works
     # by building model matrices using the formula, doesn't work with incoming model matrices
     stopifnot(is.null(modelMatrix))
-    
+
     # fit the negative binomial GLM without a prior,
     # used to construct the prior variances
     # and for the hat matrix diagonals for calculating Cook's distance
@@ -267,7 +271,7 @@ fitGLMsWithPrior <- function(object, betaTol, maxit, useOptim, useQR, betaPriorV
     modelMatrixNames[modelMatrixNames == "(Intercept)"] <- "Intercept"
     modelMatrixNames <- make.names(modelMatrixNames)
     colnames(betaMatrix) <- modelMatrixNames
-    
+
     # save the MLE log fold changes for addMLE argument of results
     convertNames <- renameModelMatrixColumns(colData(object),
                                              design(objectNZ))
@@ -288,7 +292,7 @@ fitGLMsWithPrior <- function(object, betaTol, maxit, useOptim, useQR, betaPriorV
     mu <- assays(objectNZ)[["mu"]]
     mleBetaMatrix <- as.matrix(mcols(objectNZ)[,grep("MLE_",names(mcols(objectNZ))),drop=FALSE])
   }
-     
+
   if (missing(betaPriorVar)) {
     betaPriorVar <- estimateBetaPriorVar(objectNZ, modelMatrix=modelMatrix)
   } else {
@@ -303,7 +307,7 @@ fitGLMsWithPrior <- function(object, betaTol, maxit, useOptim, useQR, betaPriorV
       stop(paste("betaPriorVar should have length",p,"to match:",paste(colnames(modelMatrix),collapse=", ")))
     }
   }
-  
+
   # refit the negative binomial GLM with a prior on betas
   if (any(betaPriorVar == 0)) {
     stop("beta prior variances are equal to zero for some variables")
@@ -337,6 +341,7 @@ fitGLMsWithPrior <- function(object, betaTol, maxit, useOptim, useQR, betaPriorV
 }
 
 # breaking out the optim backup code from fitNbinomGLMs
+#'@export
 fitNbinomGLMsOptim <- function(object,modelMatrix,lambda,
                                rowsForOptim,rowStable,
                                normalizationFactors,alpha_hat,
@@ -347,6 +352,8 @@ fitNbinomGLMsOptim <- function(object,modelMatrix,lambda,
   x <- modelMatrix
   lambdaNatLogScale <- lambda / log(2)^2
   large <- 30
+
+  objectiveFnList <- list()
   for (row in rowsForOptim) {
     betaRow <- if (rowStable[row] & all(abs(betaMatrix[row,]) < large)) {
       betaMatrix[row,]
@@ -368,6 +375,7 @@ fitNbinomGLMsOptim <- function(object,modelMatrix,lambda,
       negLogPost <- -1 * (logLike + logPrior)
       if (is.finite(negLogPost)) negLogPost else 10^300
     }
+    objectiveFnList[[row]] <- objectiveFn
     o <- optim(betaRow, objectiveFn, method="L-BFGS-B",lower=-large, upper=large)
     ridge <- if (length(lambdaNatLogScale) > 1) {
       diag(lambdaNatLogScale)
@@ -403,5 +411,6 @@ fitNbinomGLMsOptim <- function(object,modelMatrix,lambda,
                     }
   }
   return(list(betaMatrix=betaMatrix,betaSE=betaSE,
-              betaConv=betaConv,mu=mu,logLike=logLike))
+              betaConv=betaConv,mu=mu,logLike=logLike,
+              objectiveFnList=objectiveFnList))
 }

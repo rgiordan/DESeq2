@@ -27,7 +27,7 @@ DESeq(
 \code{\link{DESeqDataSetFromMatrix}},
 \code{\link{DESeqDataSetFromHTSeqCount}}.}
 
-\item{test}{either "Wald" or "LRT", which will then use either 
+\item{test}{either "Wald" or "LRT", which will then use either
 Wald significance tests (defined by \code{\link{nbinomWaldTest}}),
 or the likelihood ratio test on the difference in deviance between a
 full and reduced model formula (defined by \code{\link{nbinomLRT}})}
@@ -41,7 +41,7 @@ for the type of size factor estimation. See
 \code{\link{estimateSizeFactors}} for description.}
 
 \item{betaPrior}{whether or not to put a zero-mean normal prior on
-the non-intercept coefficients 
+the non-intercept coefficients
 See \code{\link{nbinomWaldTest}} for description of the calculation
 of the beta prior. In versions \code{>=1.16}, the default is set
 to \code{FALSE}, and shrunken LFCs are obtained afterwards using
@@ -116,7 +116,7 @@ For complete details on each step, see the manual pages of the respective
 functions. After the \code{DESeq} function returns a DESeqDataSet object,
 results tables (log2 fold changes and p-values) can be generated
 using the \code{\link{results}} function.
-Shrunken LFC can then be generated using the \code{\link{lfcShrink}} function. 
+Shrunken LFC can then be generated using the \code{\link{lfcShrink}} function.
 All support questions should be posted to the Bioconductor
 support site: \url{http://support.bioconductor.org}.
 }

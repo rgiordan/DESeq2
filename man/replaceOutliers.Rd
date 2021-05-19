@@ -65,7 +65,7 @@ The \code{\link{DESeq}} function calculates a diagnostic measure called
 Cook's distance for every gene and every sample. The \code{\link{results}}
 function then sets the p-values to \code{NA} for genes which contain
 an outlying count as defined by a Cook's distance above a threshold.
-With many degrees of freedom, i.e. many more samples than number of parameters to 
+With many degrees of freedom, i.e. many more samples than number of parameters to
 be estimated-- it might be undesirable to remove entire genes from the analysis
 just because their data include a single count outlier.
 An alternate strategy is to replace the outlier counts

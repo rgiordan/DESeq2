@@ -129,7 +129,7 @@ dds <- estimateSizeFactors(dds)
 dds <- estimateDispersionsGeneEst(dds)
 dds <- estimateDispersionsFit(dds)
 dds <- estimateDispersionsMAP(dds)
-plotDispEsts(dds) 
+plotDispEsts(dds)
 
 # after having run estimateDispersionsFit()
 # the dispersion prior variance over all genes
